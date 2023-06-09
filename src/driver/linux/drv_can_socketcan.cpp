@@ -1,5 +1,5 @@
 /******************************************************************************
-   Copyright 2020 Embedded Office GmbH & Co. KG
+   @author Sandro Gort
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@
 * PRIVATE VARIABLES
 ******************************************************************************/
 int CanSocket = -1;
-struct sockaddr_can CanAddress;
+char CanInterfaceName[32];
 
 /******************************************************************************
 * PRIVATE FUNCTIONS
@@ -90,10 +90,15 @@ static void DrvCanInit(void)
 
     struct sockaddr_can addr {};
     addr.can_family = AF_CAN;
-    addr.can_ifindex = if_nametoindex("can0");
+    addr.can_ifindex = if_nametoindex(CanInterfaceName);
+    if (addr.can_ifindex == 0) {
+        std::cout << "Invalid Parameter, can interface name unknown (" << CanInterfaceName << ")" << std::endl;
+        while (1){} 
+    }
+
     int fd = bind(CanSocket, reinterpret_cast<struct sockaddr *>(&addr), sizeof(addr));
-    if (fd == -1) {
-        std::cout << "Binding CAN socket failed" << std::endl;
+    if (fd < 0) {
+        std::cout << "Open CAN socket " << CanInterfaceName  << " failed" << std::endl;
         while (1){} 
     }
 

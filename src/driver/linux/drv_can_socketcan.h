@@ -33,6 +33,8 @@ extern "C" {
 
 extern const CO_IF_CAN_DRV Linux_Socketcan_CanDriver;
 
+extern char CanInterfaceName[32];
+
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }
 #endif
