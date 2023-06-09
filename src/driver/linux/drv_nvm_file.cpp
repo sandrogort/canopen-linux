@@ -20,6 +20,8 @@
 
 #include "drv_nvm_file.h"
 
+#include <iostream>
+
 /******************************************************************************
 * PRIVATE TYPE DEFINITION
 ******************************************************************************/
@@ -56,15 +58,19 @@ const CO_IF_NVM_DRV Linux_File_NvmDriver = {
 
 static void DrvNvmInit(void)
 {
-
+    std::cout << __func__ << " not implemented" << std::endl;
 }
 
 static uint32_t DrvNvmRead(uint32_t start, uint8_t *buffer, uint32_t size)
 {
+    std::cout << __func__ << " not implemented" << std::endl;
+
     return (0u);
 }
 
 static uint32_t DrvNvmWrite(uint32_t start, uint8_t *buffer, uint32_t size)
 {
+    std::cout << __func__ << " not implemented" << std::endl;
+
     return (0u);
 }

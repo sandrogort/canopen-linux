@@ -31,7 +31,7 @@ target_sources(canopen-linux
     # config
     config/main.cpp
     # driver
-    driver/linux/drv_can_socketcan.c
+    driver/linux/drv_can_socketcan.cpp
     driver/linux/drv_nvm_file.cpp
     driver/linux/drv_timer_cpp.cpp
 )

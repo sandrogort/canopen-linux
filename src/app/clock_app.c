@@ -114,6 +114,7 @@ void AppStart(void)
      * callback functions.
      */
     while (1) {
+        CONodeProcess(&Clk);
         COTmrProcess(&Clk.Tmr);
     }
 }

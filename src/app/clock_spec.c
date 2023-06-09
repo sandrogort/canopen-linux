@@ -26,10 +26,10 @@
 ******************************************************************************/
 
 /* Define some default values for our CANopen node: */
-#define APP_NODE_ID       1u                  /* CANopen node ID             */
+#define APP_NODE_ID       4u                  /* CANopen node ID             */
 #define APP_BAUDRATE      250000u             /* CAN baudrate                */
 #define APP_TMR_N         16u                 /* Number of software timers   */
-#define APP_TICKS_PER_SEC 1000000u            /* Timer clock frequency in Hz */
+#define APP_TICKS_PER_SEC 100u                /* Timer clock frequency in Hz */
 #define APP_OBJ_N         128u                /* Object dictionary max size  */
 
 /******************************************************************************
