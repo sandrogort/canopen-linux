@@ -26,6 +26,7 @@
 #include <iostream>
 #include <thread>
 #include <atomic>
+#include <mutex>
 
 /******************************************************************************
 * PRIVATE VARIABLES
@@ -42,14 +43,17 @@ public:
     }
 
     void Reset() {
+        std::lock_guard<std::mutex> lock(mutex_);
         count_ = 0;
     }
 
     void Reload(uint32_t reload) {
+        std::lock_guard<std::mutex> lock(mutex_);
         count_ = reload;
     }
 
     uint32_t GetCount() {
+        std::lock_guard<std::mutex> lock(mutex_);
         return count_;
     }
 
@@ -63,20 +67,25 @@ public:
 private:
     std::atomic<bool> endThread_ = false;
     std::thread timerThread_;
+    std::mutex mutex_;
     uint32_t count_;
 
     void CountdownThread() {
         while (!endThread_) {
-            Countdown();
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            if (Countdown()) {
+                COTmrService(&Clk.Tmr);
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
         }
     }
 
-    void Countdown() {
+    bool Countdown() {
+        std::lock_guard<std::mutex> lock(mutex_);
         if (count_ > 0) {
             count_--;
-            COTmrService(&Clk.Tmr);
+            return true;
         }
+        return false;
     }
 };
 
