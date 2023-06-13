@@ -14,33 +14,25 @@
    limitations under the License.
 ******************************************************************************/
 
-#ifndef CLOCK_APP_H_
-#define CLOCK_APP_H_
-
-#ifdef __cplusplus               /* for compatibility with C++ environments  */
-extern "C" {
-#endif
-
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
 
-#include "clock_spec.h"
+#include "hw.h"
 
 /******************************************************************************
-* EXTERNAL SYMBOLS
+* PUBLIC VARIABLES
 ******************************************************************************/
 
-extern CO_NODE Clk;
+/* Select the drivers for your application. For possible
+ * selections, see the directory /drivers.
+ */
+struct CO_IF_DRV_T AppDriver = {
+    &Linux_Socketcan_CanDriver,
+    &Linux_Cpp_TimerDriver,
+    &Linux_File_NvmDriver
+};
 
 /******************************************************************************
 * PUBLIC FUNCTIONS
 ******************************************************************************/
-
-void AppStart(void);
-
-#ifdef __cplusplus               /* for compatibility with C++ environments  */
-}
-#endif
-
-#endif /* CLOCK_APP_H_ */

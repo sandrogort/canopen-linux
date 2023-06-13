@@ -18,7 +18,7 @@
 * INCLUDES
 ******************************************************************************/
 
-#include "clock_app.h"
+#include "app.h"
 
 #include "drv_can_socketcan.h"
 

@@ -20,8 +20,8 @@
 
 #include "drv_timer_cpp.h"
 
-#include "clock_hw.h"
-#include "clock_app.h"
+#include "hw.h"
+#include "app.h"
 
 #include <iostream>
 #include <thread>
@@ -73,7 +73,7 @@ private:
     void CountdownThread() {
         while (!endThread_) {
             if (Countdown()) {
-                COTmrService(&Clk.Tmr);
+                COTmrService(&Node.Tmr);
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(50));
         }

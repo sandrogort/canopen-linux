@@ -18,14 +18,14 @@
 * INCLUDES
 ******************************************************************************/
 
-#include "clock_app.h"
+#include "app.h"
 
 /******************************************************************************
 * PRIVATE VARIABLES
 ******************************************************************************/
 
 /* Allocate a global CANopen node object */
-CO_NODE Clk;
+CO_NODE Node;
 
 /******************************************************************************
 * PRIVATE FUNCTIONS
@@ -92,8 +92,8 @@ void AppStart(void)
     /* Initialize the CANopen stack. Stop execution if an
      * error is detected.
      */
-    CONodeInit(&Clk, &AppSpec);
-    if (CONodeGetErr(&Clk) != CO_ERR_NONE) {
+    CONodeInit(&Node, &AppSpec);
+    if (CONodeGetErr(&Node) != CO_ERR_NONE) {
         while(1);    /* error not handled */
     }
 
@@ -101,20 +101,20 @@ void AppStart(void)
      * call to the callback function 'AppClock()' with a period
      * of 1s (equal: 1000ms).
      */
-    ticks = COTmrGetTicks(&Clk.Tmr, 1000, CO_TMR_UNIT_1MS);
-    COTmrCreate(&Clk.Tmr, 0, ticks, AppClock, &Clk);
+    ticks = COTmrGetTicks(&Node.Tmr, 1000, CO_TMR_UNIT_1MS);
+    COTmrCreate(&Node.Tmr, 0, ticks, AppClock, &Node);
 
     /* Start the CANopen node and set it automatically to
      * NMT mode: 'OPERATIONAL'.
      */
-    CONodeStart(&Clk);
-    CONmtSetMode(&Clk.Nmt, CO_OPERATIONAL);
+    CONodeStart(&Node);
+    CONmtSetMode(&Node.Nmt, CO_OPERATIONAL);
 
     /* In the background loop we execute elapsed action
      * callback functions.
      */
     while (1) {
-        CONodeProcess(&Clk);
-        COTmrProcess(&Clk.Tmr);
+        CONodeProcess(&Node);
+        COTmrProcess(&Node.Tmr);
     }
 }
