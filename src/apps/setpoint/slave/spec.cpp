@@ -2,17 +2,16 @@
 #include "hw.h"
 
 /* Define some default values for our CANopen node: */
-#define APP_NODE_ID       1u                  /* CANopen node ID             */
+#define APP_NODE_ID       2u                  /* CANopen node ID             */
 #define APP_BAUDRATE      250000u             /* CAN baudrate                */
 #define APP_TMR_N         16u                 /* Number of software timers   */
-#define APP_TICKS_PER_SEC 20u                /* Timer clock frequency in Hz */
+#define APP_TICKS_PER_SEC 20u                 /* Timer clock frequency in Hz */
 #define APP_OBJ_N         128u                /* Object dictionary max size  */
 
 /* allocate variables for dynamic runtime value in RAM */
 static uint8_t  Obj1001_00_08 = 0;
 
-uint32_t obj1005 = CO_SYNC_COBID_ON | 0x80; // Enable sync producer
-uint32_t obj1006 = 500 * 1000; // sync cycle time in us
+uint32_t obj1005 = 0x80; // Enable sync consumer
 
 static uint16_t Obj1017_00_10 = 0;
 
@@ -32,9 +31,13 @@ const  uint32_t Obj1018_04_20 = 0x00000000L;
 const  uint32_t Obj1200_01_20 = CO_COBID_SDO_REQUEST();
 const  uint32_t Obj1200_02_20 = CO_COBID_SDO_RESPONSE();
 
-const  uint32_t Obj1800_01_20 = 0x40000180;
+const  uint32_t Obj1400_01_20 = 0x00000180;
 
-const  uint32_t Obj1A00_01_20 = CO_LINK(0x2100, 0x00, 32);
+const  uint32_t Obj1600_01_20 = CO_LINK(0x2100, 0x00, 32);
+
+const  uint32_t Obj1800_01_20 = 0x40000181;
+
+const  uint32_t Obj1A00_01_20 = CO_LINK(0x2200, 0x00, 32);
 
 /* define the static object dictionary */
 static struct CO_OBJ_T ClockOD[APP_OBJ_N] = {
@@ -42,7 +45,6 @@ static struct CO_OBJ_T ClockOD[APP_OBJ_N] = {
     {CO_KEY(0x1001, 0, CO_OBJ_____R_), CO_TUNSIGNED8 , (CO_DATA)(&Obj1001_00_08)},
 
     {CO_KEY(0x1005, 0, CO_OBJ_____RW), CO_TSYNC_ID,    (CO_DATA)(&obj1005)},
-    {CO_KEY(0x1006, 0, CO_OBJ_____RW), CO_TSYNC_CYCLE, (CO_DATA)(&obj1006)},
 
     {CO_KEY(0x1014, 0, CO_OBJ__N__R_), CO_TEMCY_ID,    (CO_DATA)(&Obj1014_00_20)},
     {CO_KEY(0x1017, 0, CO_OBJ_____RW), CO_THB_PROD,    (CO_DATA)(&Obj1017_00_10)},
@@ -57,14 +59,21 @@ static struct CO_OBJ_T ClockOD[APP_OBJ_N] = {
     {CO_KEY(0x1200, 1, CO_OBJ__N__R_), CO_TUNSIGNED32, (CO_DATA)(&Obj1200_01_20)},
     {CO_KEY(0x1200, 2, CO_OBJ__N__R_), CO_TUNSIGNED32, (CO_DATA)(&Obj1200_02_20)},
 
+    {CO_KEY(0x1400, 0, CO_OBJ_D___R_), CO_TUNSIGNED8 , (CO_DATA)(2)             },
+    {CO_KEY(0x1400, 1, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&Obj1400_01_20)},
+    {CO_KEY(0x1400, 2, CO_OBJ_D___R_), CO_TUNSIGNED8 , (CO_DATA)(1)             },
+
+    {CO_KEY(0x1600, 0, CO_OBJ_D___R_), CO_TUNSIGNED8 , (CO_DATA)(1)             },
+    {CO_KEY(0x1600, 1, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&Obj1600_01_20)},    
+
     {CO_KEY(0x1800, 0, CO_OBJ_D___R_), CO_TUNSIGNED8 , (CO_DATA)(2)             },
     {CO_KEY(0x1800, 1, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&Obj1800_01_20)},
-    {CO_KEY(0x1800, 2, CO_OBJ_D___R_), CO_TUNSIGNED8 , (CO_DATA)(254)           },
+    {CO_KEY(0x1800, 2, CO_OBJ_D___R_), CO_TUNSIGNED8 , (CO_DATA)(1)             },
 
     {CO_KEY(0x1A00, 0, CO_OBJ_D___R_), CO_TUNSIGNED8 , (CO_DATA)(1)             },
     {CO_KEY(0x1A00, 1, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&Obj1A00_01_20)},
 
-    {CO_KEY(0x2100, 0, CO_OBJ___APR_), CO_TUNSIGNED32, (CO_DATA)(&Obj2100_00_20)}, // setpoint
+    {CO_KEY(0x2100, 0, CO_OBJ____PRW), CO_TUNSIGNED32, (CO_DATA)(&Obj2100_00_20)}, // setpoint
     {CO_KEY(0x2200, 0, CO_OBJ____PR_), CO_TUNSIGNED32 ,(CO_DATA)(&Obj2200_00_20)}, // actual value
 
     CO_OBJ_DICT_ENDMARK  /* mark end of used objects */
