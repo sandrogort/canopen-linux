@@ -49,3 +49,5 @@ target_include_directories(canopen-linux
 # specify the dependencies for this application
 #
 target_link_libraries(canopen-linux canopen-stack)
+
+set_target_properties(canopen-linux PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_ROOT_DIR}/bin/clock")

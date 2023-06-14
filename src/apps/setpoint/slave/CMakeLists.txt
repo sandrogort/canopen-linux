@@ -26,3 +26,5 @@ target_include_directories(${TARGET_NAME}
 )
 
 target_link_libraries(${TARGET_NAME} canopen-stack)
+
+set_target_properties(${TARGET_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_ROOT_DIR}/bin/setpoint")

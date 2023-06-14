@@ -64,7 +64,7 @@ cmake --build ./build/debug
 
 ### Running application
 
-Virtual CAN bus must be setup prior to running to application as following.
+Virtual CAN bus must be setup prior to running to application as following. A script to do so can be found under script/start_vcan.sh.
 
 ```bash
 sudo modprobe vcan
