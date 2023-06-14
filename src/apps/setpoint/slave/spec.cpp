@@ -17,6 +17,7 @@ static uint16_t Obj1017_00_10 = 0;
 
 static uint32_t Obj2100_00_20 = 0;
 static uint32_t Obj2200_00_20 = 0;
+static uint8_t  Obj2300_00_08 = 0;
 
 /* allocate variables for constant values in FLASH */
 const  uint32_t Obj1000_00_20 = 0x00000000L;
@@ -38,6 +39,7 @@ const  uint32_t Obj1600_01_20 = CO_LINK(0x2100, 0x00, 32);
 const  uint32_t Obj1800_01_20 = 0x40000181;
 
 const  uint32_t Obj1A00_01_20 = CO_LINK(0x2200, 0x00, 32);
+const  uint32_t Obj1A00_02_20 = CO_LINK(0x2300, 0x00, 8);
 
 /* define the static object dictionary */
 static struct CO_OBJ_T ClockOD[APP_OBJ_N] = {
@@ -70,11 +72,13 @@ static struct CO_OBJ_T ClockOD[APP_OBJ_N] = {
     {CO_KEY(0x1800, 1, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&Obj1800_01_20)},
     {CO_KEY(0x1800, 2, CO_OBJ_D___R_), CO_TUNSIGNED8 , (CO_DATA)(1)             },
 
-    {CO_KEY(0x1A00, 0, CO_OBJ_D___R_), CO_TUNSIGNED8 , (CO_DATA)(1)             },
+    {CO_KEY(0x1A00, 0, CO_OBJ_D___R_), CO_TUNSIGNED8 , (CO_DATA)(2)             },
     {CO_KEY(0x1A00, 1, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&Obj1A00_01_20)},
+    {CO_KEY(0x1A00, 2, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&Obj1A00_02_20)},
 
     {CO_KEY(0x2100, 0, CO_OBJ____PRW), CO_TUNSIGNED32, (CO_DATA)(&Obj2100_00_20)}, // setpoint
     {CO_KEY(0x2200, 0, CO_OBJ____PR_), CO_TUNSIGNED32 ,(CO_DATA)(&Obj2200_00_20)}, // actual value
+    {CO_KEY(0x2300, 0, CO_OBJ____PR_), CO_TUNSIGNED8  ,(CO_DATA)(&Obj2300_00_08)}, // busy
 
     CO_OBJ_DICT_ENDMARK  /* mark end of used objects */
 };

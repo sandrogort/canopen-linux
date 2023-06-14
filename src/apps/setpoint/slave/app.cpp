@@ -11,7 +11,9 @@ static void SetActualValue(void *p_arg)
     CO_OBJ   *od_setpoint;
     uint32_t  setpoint;
     CO_OBJ   *od_actualValue;
-    uint32_t  actualValue;    
+    uint32_t  actualValue;  
+    CO_OBJ   *od_busy;
+    uint8_t   busy;          
 
     /* For flexible usage (not needed, but nice to show), we use the argument
      * as reference to the CANopen node object. If no node is given, we ignore
@@ -30,11 +32,11 @@ static void SetActualValue(void *p_arg)
 
         od_setpoint = CODictFind(&node->Dict, CO_DEV(0x2100, 0));
         od_actualValue = CODictFind(&node->Dict, CO_DEV(0x2200, 0));
+        od_busy = CODictFind(&node->Dict, CO_DEV(0x2300, 0));
 
         COObjRdValue(od_setpoint, node, (void *)&setpoint, sizeof(setpoint));
         COObjRdValue(od_actualValue, node, (void *)&actualValue, sizeof(actualValue));
-
-        std::cout << setpoint << std::endl;
+        COObjRdValue(od_busy, node, (void *)&busy, sizeof(busy));
 
         if (actualValue > setpoint) {
             actualValue--;
@@ -42,14 +44,21 @@ static void SetActualValue(void *p_arg)
             actualValue++;
         }
 
+        if (actualValue == setpoint) {
+            busy = 0;
+        } else {
+            busy = 1;
+        }
+
         COObjWrValue(od_actualValue , node, (void *)&actualValue  , sizeof(actualValue)  );
+        COObjWrValue(od_busy , node, (void *)&busy  , sizeof(busy)  );
     }
 }
 
 void COPdoSyncUpdate(CO_RPDO *pdo)
 {
     (void)pdo;
-
+    
     /* Optional: place here some code, which is called
      * right after the object dictionary update due to
      * a synchronized PDO.

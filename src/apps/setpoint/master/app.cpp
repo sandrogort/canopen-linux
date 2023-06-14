@@ -1,6 +1,7 @@
 #include "app.h"
 
 #include <cstdint>
+#include <iostream>
 
 CO_NODE Node;
 
@@ -35,6 +36,33 @@ static void SetSetPoint(void *p_arg, uint32_t p_setpoint)
     }
 }
 
+void COPdoAsyncUpdate(CO_RPDO *pdo)
+{
+    (void)pdo;
+
+    static uint8_t oldBusy = 0;
+    static bool firstBusy = true;
+
+    /* Optional: place here some code, which is called
+     * when a PDO is written after it is received.
+     */
+    if (pdo->Identifier == 0x181 && pdo->ObjNum == 2) {
+        CO_OBJ   *od_busy;
+        uint8_t   busy;
+
+        od_busy = CODictFind(&pdo->Node->Dict, CO_DEV(0x2300, 0));
+        COObjRdValue(od_busy, pdo->Node, (void *)&busy, sizeof(busy)); 
+        if (busy == false && firstBusy) {
+            firstBusy = false;
+            SetSetPoint(pdo->Node, 42);
+        } else if (oldBusy == 1 && busy == 0) {
+            int random = rand() % 100;
+            SetSetPoint(pdo->Node, random);
+        } 
+        oldBusy = busy;   
+    }
+}
+
 void AppStart() {
   uint32_t ticks;
 
@@ -51,8 +79,6 @@ void AppStart() {
    */
   CONodeStart(&Node);
   CONmtSetMode(&Node.Nmt, CO_OPERATIONAL);
-
-  SetSetPoint(&Node, 42);
 
   /* In the background loop we execute elapsed action
    * callback functions.

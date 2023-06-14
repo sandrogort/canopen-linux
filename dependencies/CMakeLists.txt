@@ -15,13 +15,10 @@
 #******************************************************************************
 
 #---
-# Add the CANopen Stack project from Embedded Office
+# Add the CANopen Stack project
 #
-set(CO_TARGET   "canopen-stack")
-set(CO_PROJECT  "embedded-office/canopen-stack")
-set(CO_VERSION  "4.4.0")
 CPMAddPackage(
   NAME    canopen-stack
-  URL     https://github.com/${CO_PROJECT}/releases/download/v${CO_VERSION}/${CO_TARGET}-src.zip
-  VERSION ${CO_VERSION}
+  URL     https://github.com/sandrogort/canopen-stack/archive/refs/heads/master.zip
+  #VERSION ${CO_VERSION}
 )
