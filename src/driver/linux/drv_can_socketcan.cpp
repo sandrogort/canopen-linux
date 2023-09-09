@@ -103,7 +103,7 @@ static void DrvCanInit(void)
     }
 
     struct timeval tvRx {
-        0, 500000
+        0, 1
     };
     setsockopt(CanSocket, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<char *>(&tvRx), sizeof tvRx);
     struct timeval tvTx {
