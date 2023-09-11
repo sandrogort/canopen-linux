@@ -36,7 +36,7 @@ static void SetSetPoint(void *p_arg, uint32_t p_setpoint)
     }
 }
 
-void COPdoAsyncUpdate(CO_RPDO *pdo)
+void COPdoUpdate(CO_RPDO *pdo)
 {
     (void)pdo;
 
@@ -51,15 +51,15 @@ void COPdoAsyncUpdate(CO_RPDO *pdo)
         uint8_t   busy;
 
         od_busy = CODictFind(&pdo->Node->Dict, CO_DEV(0x2300, 0));
-        COObjRdValue(od_busy, pdo->Node, (void *)&busy, sizeof(busy)); 
+        COObjRdValue(od_busy, pdo->Node, (void *)&busy, sizeof(busy));
         if (busy == false && firstBusy) {
             firstBusy = false;
             SetSetPoint(pdo->Node, 42);
         } else if (oldBusy == 1 && busy == 0) {
             int random = rand() % 100;
             SetSetPoint(pdo->Node, random);
-        } 
-        oldBusy = busy;   
+        }
+        oldBusy = busy;
     }
 }
 

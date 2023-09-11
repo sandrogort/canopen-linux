@@ -19,6 +19,6 @@
 #
 CPMAddPackage(
   NAME    canopen-stack
-  URL     https://github.com/sandrogort/canopen-stack/archive/refs/heads/master.zip
+  URL     https://github.com/sandrogort/canopen-stack/archive/refs/heads/COPdoUpdate.zip
   #VERSION ${CO_VERSION}
 )
